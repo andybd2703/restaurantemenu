@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Menú Restaurante Paula</title>
+<link rel="icon" href="306132377_427404206203525_5987524158207114688_n.jpg" type="image/png"> <!-- Ruta de tu logo -->
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background: linear-gradient(45deg, #FF0000, #FFA500, #FFD700);
+        color: white;
+        min-height: 100vh;
+    }
+
+    .menu-container {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+        background: rgba(75, 44, 32, 0.9);
+        border-radius: 10px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .header {
+        text-align: center;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #E6AC27;
+    }
+
+    .header h1 {
+        font-size: 36px;
+        margin: 0;
+        color: #FFD700;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    }
+
+    .header h2 {
+        font-size: 24px;
+        margin: 5px 0 0;
+        color: #FFD700;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+    }
+
+    .counter {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .counter button {
+        background-color: #FFD700;
+        color: #000;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 15px;
+        font-size: 20px;
+        font-weight: bold;
+        cursor: pointer;
+        margin: 0 5px;
+    }
+
+    .counter span {
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .category {
+        margin-bottom: 20px;
+    }
+
+    .category h3 {
+        font-size: 24px;
+        text-transform: uppercase;
+        color: #FFD700;
+        border-bottom: 1px solid #FFD700;
+        margin-bottom: 10px;
+        padding-bottom: 5px;
+    }
+
+    .category select {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        border: none;
+        background-color: #FFF5E1;
+        color: #000;
+    }
+
+    .btn-submit {
+        width: 100%;
+        padding: 15px;
+        font-size: 18px;
+        margin-top: 20px;
+        background-color: #FFD700;
+        color: #000;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    .btn-submit:hover {
+        background-color: #FFA500;
+    }
+
+    .pedido-preview {
+        background: rgba(0, 0, 0, 0.7);
+        padding: 10px;
+        margin-top: 20px;
+        border-radius: 5px;
+    }
+
+    .pedido-preview ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        color: #FFF;
+    }
+
+    .pedido-preview li {
+        margin-bottom: 5px;
+    }
+</style>
+</head>
+<body>
+    <div class="menu-container">
+        <header class="header">
+            <h1>RESTAURANTE PAULA</h1>
+            <h2>Selecciona la cantidad de almuerzos</h2>
+        </header>
+
+        <div class="counter">
+            <button id="decrease">-</button>
+            <span id="quantity">1</span>
+            <button id="increase">+</button>
+        </div>
+
+        <form id="menu-form">
+            <!-- Aquí se generarán los formularios dinámicamente -->
+        </form>
+
+        <button type="button" class="btn-submit" id="enviar-pedido">Enviar Pedido</button>
+    </div>
+
+<script>
+    const cantidadSpan = document.getElementById("quantity");
+    const menuForm = document.getElementById("menu-form");
+    const decreaseBtn = document.getElementById("decrease");
+    const increaseBtn = document.getElementById("increase");
+    let cantidad = 1;
+
+    const actualizarCantidad = () => {
+        cantidadSpan.textContent = cantidad;
+        generarFormularios();
+    };
+
+    decreaseBtn.addEventListener("click", () => {
+        if (cantidad > 1) {
+            cantidad--;
+            actualizarCantidad();
+        }
+    });
+
+    increaseBtn.addEventListener("click", () => {
+        cantidad++;
+        actualizarCantidad();
+    });
+
+    const obtenerSopaDelDia = () => {
+        const dias = ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"];
+        const sopasPorDia = {
+            lunes: ["Sancocho de pescado", "Sancocho de pollo"],
+            martes: ["Sancocho de pescado", "Sancocho de pollo", "Sopa campesina"],
+            miércoles: ["Sancocho de pescado", "Sopa de pastas"],
+            jueves: ["Sancocho de pescado", "Sopa de fideos"],
+            viernes: ["Cazuela de frijoles", "Sancocho de pescado", "Sancocho de pollo"],
+            sábado: ["Sancocho de pescado", "Sopa de guineo"],
+            domingo: ["Sancocho de pescado", "Sancocho de gallina"]
+        };
+
+        const diaDeLaSemana = new Date().toLocaleDateString('es-ES', { weekday: 'long' }).toLowerCase();
+        return sopasPorDia[diaDeLaSemana] || [];
+    };
+
+    const generarFormularios = () => {
+        menuForm.innerHTML = "";
+        const sopasDelDia = obtenerSopaDelDia();
+
+        for (let i = 1; i <= cantidad; i++) {
+            const formGroup = document.createElement("div");
+            formGroup.classList.add("category");
+
+            let sopasOptions = "<option value=''>Seleccione una sopa</option>";
+            sopasDelDia.forEach(sopa => {
+                sopasOptions += `<option value="${sopa}">${sopa}</option>`;
+            });
+
+            formGroup.innerHTML = `
+                <h3>Almuerzo ${i}</h3>
+                <label>Sopa:</label>
+                <select>
+                    ${sopasOptions}
+                </select>
+                <label>Plato:</label>
+                <select>
+                    <option value="">Seleccione un plato</option>
+                    <option value="Carne asada">Carne asada</option>
+                    <option value="Carne en bistec">Carne en bistec</option>
+                    <option value="Carne a la BBQ">Carne a la BBQ</option>
+                    <option value="Carne encebollada">Carne encebollada</option>
+                    <option value="Pollo a la plancha/BBQ">Pollo a la plancha/BBQ</option>
+                    <option value="Pollo sudado">Pollo sudado</option>
+                    <option value="Pollo frito">Pollo frito</option>
+                    <option value="Cerdo a la plancha/BBQ">Cerdo a la plancha/BBQ</option>
+                    <option value="Hígado a la plancha">Hígado a la plancha</option>
+                    <option value="Hígado en bistec">Hígado en bistec</option>
+                    <option value="Hígado encebollado">Hígado encebollado</option>
+                </select>
+                <label>Acompañante:</label>
+                <select>
+                    <option value="Sin acompañante">Sin acompañante</option>
+                    <option value="Papas a la Francesa">Papas a la Francesa</option>
+                </select>
+            `;
+            menuForm.appendChild(formGroup);
+        }
+    };
+
+    document.getElementById("enviar-pedido").addEventListener("click", () => {
+        const pedidos = [];
+        const categorias = menuForm.querySelectorAll(".category");
+        categorias.forEach((categoria, index) => {
+            const selects = categoria.querySelectorAll("select");
+            const sopa = selects[0].value;
+            const plato = selects[1].value;
+            const acompanante = selects[2].value;
+            pedidos.push(`Almuerzo ${index + 1}: Sopa: ${sopa}, Plato: ${plato}, Acompañante: ${acompanante}`);
+        });
+
+        if (pedidos.length === 0 || pedidos.some(pedido => pedido.includes(": Sopa: ,"))) {
+            alert("Por favor completa todos los campos antes de enviar.");
+            return;
+        }
+
+        const mensaje = `Hola, aquí está mi pedido:\n\n${pedidos.join("\n")}`;
+        const telefono = "573205063020"; // Número del restaurante
+        const url = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
+        window.open(url, "_blank");
+    });
+
+    // Generar el primer formulario por defecto
+    generarFormularios();
+</script>
+</body>
+</html>
