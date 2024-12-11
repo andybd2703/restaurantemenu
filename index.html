@@ -150,114 +150,140 @@
         <button type="button" class="btn-submit" id="enviar-pedido">Enviar Pedido</button>
     </div>
 
-<script>
-    const cantidadSpan = document.getElementById("quantity");
-    const menuForm = document.getElementById("menu-form");
-    const decreaseBtn = document.getElementById("decrease");
-    const increaseBtn = document.getElementById("increase");
-    let cantidad = 1;
-
-    const actualizarCantidad = () => {
-        cantidadSpan.textContent = cantidad;
-        generarFormularios();
-    };
-
-    decreaseBtn.addEventListener("click", () => {
-        if (cantidad > 1) {
-            cantidad--;
-            actualizarCantidad();
-        }
-    });
-
-    increaseBtn.addEventListener("click", () => {
-        cantidad++;
-        actualizarCantidad();
-    });
-
-    const obtenerSopaDelDia = () => {
-        const dias = ["lunes", "martes", "miércoles", "jueves", "viernes", "sábado", "domingo"];
-        const sopasPorDia = {
-            lunes: ["Sancocho de pescado", "Sancocho de pollo"],
-            martes: ["Sancocho de pescado", "Sancocho de pollo", "Sopa campesina"],
-            miércoles: ["Sancocho de pescado", "Sopa de pastas"],
-            jueves: ["Sancocho de pescado", "Sopa de fideos"],
-            viernes: ["Cazuela de frijoles", "Sancocho de pescado", "Sancocho de pollo"],
-            sábado: ["Sancocho de pescado", "Sopa de guineo"],
-            domingo: ["Sancocho de pescado", "Sancocho de gallina"]
+    <script>
+        const cantidadSpan = document.getElementById("quantity");
+        const menuForm = document.getElementById("menu-form");
+        const decreaseBtn = document.getElementById("decrease");
+        const increaseBtn = document.getElementById("increase");
+        let cantidad = 1;
+    
+        const obtenerSopaDelDia = () => {
+            const sopasPorDia = {
+                lunes: ["Sancocho de pescado", "Sancocho de pollo"],
+                martes: ["Sancocho de pescado", "Sancocho de pollo", "Sopa campesina"],
+                miércoles: ["Sancocho de pescado", "Sopa de pastas"],
+                jueves: ["Sancocho de pescado", "Sopa de fideos"],
+                viernes: ["Cazuela de frijoles", "Sancocho de pescado", "Sancocho de pollo"],
+                sábado: ["Sancocho de pescado", "Sopa de guineo"],
+                domingo: ["Sancocho de pescado", "Sancocho de gallina"]
+            };
+    
+            const diaDeLaSemana = new Date().toLocaleDateString('es-ES', { weekday: 'long' }).toLowerCase();
+            return sopasPorDia[diaDeLaSemana] || [];
         };
-
-        const diaDeLaSemana = new Date().toLocaleDateString('es-ES', { weekday: 'long' }).toLowerCase();
-        return sopasPorDia[diaDeLaSemana] || [];
-    };
-
-    const generarFormularios = () => {
-        menuForm.innerHTML = "";
-        const sopasDelDia = obtenerSopaDelDia();
-
-        for (let i = 1; i <= cantidad; i++) {
-            const formGroup = document.createElement("div");
-            formGroup.classList.add("category");
-
-            let sopasOptions = "<option value=''>Seleccione una sopa</option>";
-            sopasDelDia.forEach(sopa => {
-                sopasOptions += `<option value="${sopa}">${sopa}</option>`;
-            });
-
-            formGroup.innerHTML = `
-                <h3>Almuerzo ${i}</h3>
-                <label>Sopa:</label>
-                <select>
-                    ${sopasOptions}
-                </select>
-                <label>Plato:</label>
-                <select>
-                    <option value="">Seleccione un plato</option>
-                    <option value="Carne asada">Carne asada</option>
-                    <option value="Carne en bistec">Carne en bistec</option>
-                    <option value="Carne a la BBQ">Carne a la BBQ</option>
-                    <option value="Carne encebollada">Carne encebollada</option>
-                    <option value="Pollo a la plancha/BBQ">Pollo a la plancha/BBQ</option>
-                    <option value="Pollo sudado">Pollo sudado</option>
-                    <option value="Pollo frito">Pollo frito</option>
-                    <option value="Cerdo a la plancha/BBQ">Cerdo a la plancha/BBQ</option>
-                    <option value="Hígado a la plancha">Hígado a la plancha</option>
-                    <option value="Hígado en bistec">Hígado en bistec</option>
-                    <option value="Hígado encebollado">Hígado encebollado</option>
-                </select>
-                <label>Acompañante:</label>
-                <select>
-                    <option value="Sin acompañante">Sin acompañante</option>
-                    <option value="Papas a la Francesa">Papas a la Francesa</option>
-                </select>
-            `;
-            menuForm.appendChild(formGroup);
-        }
-    };
-
-    document.getElementById("enviar-pedido").addEventListener("click", () => {
-        const pedidos = [];
-        const categorias = menuForm.querySelectorAll(".category");
-        categorias.forEach((categoria, index) => {
-            const selects = categoria.querySelectorAll("select");
-            const sopa = selects[0].value;
-            const plato = selects[1].value;
-            const acompanante = selects[2].value;
-            pedidos.push(`Almuerzo ${index + 1}: \n Sopa: ${sopa}, \n Plato: ${plato}, \n Acompañante: ${acompanante}`);
+    
+        const obtenerPrincipioDelDia = () => {
+            const principiosPorDia = {
+                lunes: ["Frijoles", "Garbanzos"],
+                martes: ["Frijoles", "Habichuelas"],
+                miércoles: ["Frijoles", "Espagueti"],
+                jueves: ["Frijoles", "Lentejas"],
+                viernes: ["Frijoles", "Arvejas"],
+                sábado: ["Frijoles", "Zanahoria"],
+                domingo: []
+            };
+    
+            const diaDeLaSemana = new Date().toLocaleDateString('es-ES', { weekday: 'long' }).toLowerCase();
+            return principiosPorDia[diaDeLaSemana] || [];
+        };
+    
+        const actualizarCantidad = () => {
+            cantidadSpan.textContent = cantidad;
+            generarFormularios();
+        };
+    
+        decreaseBtn.addEventListener("click", () => {
+            if (cantidad > 1) {
+                cantidad--;
+                actualizarCantidad();
+            }
         });
-
-        if (pedidos.length === 0 || pedidos.some(pedido => pedido.includes(": Sopa: ,"))) {
-            alert("Por favor completa todos los campos antes de enviar.");
-            return;
-        }
-
-        const mensaje = `Hola, aquí está mi pedido:\n\n${pedidos.join("\n")}`;
-        const telefono = "573205063020"; // Número del restaurante
-        const url = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
-        window.open(url, "_blank");
-    });
-
-    // Generar el primer formulario por defecto
-    generarFormularios();
-</script>
+    
+        increaseBtn.addEventListener("click", () => {
+            cantidad++;
+            actualizarCantidad();
+        });
+    
+        const generarFormularios = () => {
+            menuForm.innerHTML = "";
+            const sopasDelDia = obtenerSopaDelDia();
+            const principiosDelDia = obtenerPrincipioDelDia();
+    
+            for (let i = 1; i <= cantidad; i++) {
+                const formGroup = document.createElement("div");
+                formGroup.classList.add("category");
+    
+                let sopasOptions = "<option value=''>Seleccione una sopa</option>";
+                sopasDelDia.forEach(sopa => {
+                    sopasOptions += `<option value="${sopa}">${sopa}</option>`;
+                });
+    
+                let principiosOptions = "<option value=''>Seleccione un principio</option>";
+                principiosDelDia.forEach(principio => {
+                    principiosOptions += `<option value="${principio}">${principio}</option>`;
+                });
+    
+                formGroup.innerHTML = `
+                    <h3>Almuerzo ${i}</h3>
+                    <label>Sopa:</label>
+                    <select>
+                        ${sopasOptions}
+                    </select>
+                    <label>Plato:</label>
+                    <select>
+                        <option value="">Seleccione un plato</option>
+                        <option value="Carne asada">Carne asada</option>
+                        <option value="Carne en bistec">Carne en bistec</option>
+                        <option value="Carne a la BBQ">Carne a la BBQ</option>
+                        <option value="Carne encebollada">Carne encebollada</option>
+                        <option value="Pollo a la plancha/BBQ">Pollo a la plancha/BBQ</option>
+                        <option value="Pollo sudado">Pollo sudado</option>
+                        <option value="Pollo frito">Pollo frito</option>
+                        <option value="Cerdo a la plancha/BBQ">Cerdo a la plancha/BBQ</option>
+                        <option value="Hígado a la plancha">Hígado a la plancha</option>
+                        <option value="Hígado en bistec">Hígado en bistec</option>
+                        <option value="Hígado encebollado">Hígado encebollado</option>
+                    </select>
+                    <label>Principio:</label>
+                    <select>
+                        ${principiosOptions}
+                    </select>
+                    <label>Acompañante:</label>
+                    <select>
+                        <option value="Sin acompañante">Sin acompañante</option>
+                        <option value="Papas a la Francesa">Papas a la Francesa</option>
+                    </select>
+                `;
+                menuForm.appendChild(formGroup);
+            }
+        };
+    
+        document.getElementById("enviar-pedido").addEventListener("click", () => {
+            const pedidos = [];
+            const categorias = menuForm.querySelectorAll(".category");
+            categorias.forEach((categoria, index) => {
+                const selects = categoria.querySelectorAll("select");
+                const sopa = selects[0].value;
+                const plato = selects[1].value;
+                const principio = selects[2].value;
+                const acompanante = selects[3].value;
+                pedidos.push(`Almuerzo ${index + 1}: \n Sopa: ${sopa}, \n Plato: ${plato}, \n Principio: ${principio}, \n Acompañante: ${acompanante}`);
+            });
+    
+            if (pedidos.length === 0 || pedidos.some(pedido => pedido.includes(": Sopa: ,"))) {
+                alert("Por favor completa todos los campos antes de enviar.");
+                return;
+            }
+    
+            const mensaje = `Hola, aquí está mi pedido:\n\n${pedidos.join("\n")}`;
+            const telefono = "573205063020"; // Número del restaurante
+            const url = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
+            window.open(url, "_blank");
+        });
+    
+        // Generar el primer formulario por defecto
+        generarFormularios();
+    </script>
+    
 </body>
 </html>
