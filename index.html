@@ -242,7 +242,7 @@
             const sopa = selects[0].value;
             const plato = selects[1].value;
             const acompanante = selects[2].value;
-            pedidos.push(`Almuerzo ${index + 1}: Sopa: ${sopa}, Plato: ${plato}, Acompañante: ${acompanante}`);
+            pedidos.push(`Almuerzo ${index + 1}: \n Sopa: ${sopa}, \n Plato: ${plato}, \n Acompañante: ${acompanante}`);
         });
 
         if (pedidos.length === 0 || pedidos.some(pedido => pedido.includes(": Sopa: ,"))) {
