@@ -128,6 +128,30 @@
     .pedido-preview li {
         margin-bottom: 5px;
     }
+
+    .input-direccion {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    margin-top: 10px;
+    border-radius: 5px;
+    border: none;
+    background-color: #FFF5E1;
+    color: #000;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.input-direccion::placeholder {
+    color: #888;
+    font-style: italic;
+}
+
+.input-direccion:focus {
+    outline: none;
+    border: 2px solid #FFD700;
+    background-color: #FFFCE6;
+}
+
 </style>
 </head>
 <body>
@@ -146,6 +170,14 @@
         <form id="menu-form">
             <!-- Aquí se generarán los formularios dinámicamente -->
         </form>
+        <div class="category">
+            <label for="nombre-receptor">Nombre de quien recibe el domicilio:</label>
+            <input type="text" id="nombre-receptor" class="input-direccion" placeholder="Ingresa el nombre del receptor" required>
+        </div>
+        <div class="category">
+            <label for="direccion">Dirección:</label>
+            <input type="text" id="direccion" class="input-direccion" placeholder="Ingresa tu dirección" required>
+        </div>
 
         <button type="button" class="btn-submit" id="enviar-pedido">Enviar Pedido</button>
     </div>
@@ -203,11 +235,22 @@
             cantidad++;
             actualizarCantidad();
         });
+
+        const obtenerOpcionesEnsalada = () => {
+            const diaDeLaSemana = new Date().toLocaleDateString('es-ES', { weekday: 'long' }).toLowerCase();
+            const opcionesBase = ["Con Ensalada", "Sin Ensalada"];
+            if (diaDeLaSemana === "viernes") {
+                opcionesBase.push("Ensalada Roja");
+            }
+        return opcionesBase;
+};
     
         const generarFormularios = () => {
             menuForm.innerHTML = "";
             const sopasDelDia = obtenerSopaDelDia();
             const principiosDelDia = obtenerPrincipioDelDia();
+            const opcionesEnsalada = obtenerOpcionesEnsalada();
+
     
             for (let i = 1; i <= cantidad; i++) {
                 const formGroup = document.createElement("div");
@@ -222,6 +265,12 @@
                 principiosDelDia.forEach(principio => {
                     principiosOptions += `<option value="${principio}">${principio}</option>`;
                 });
+
+                let ensaladaOptions = "<option value=''>Seleccione una opción de ensalada</option>";
+        opcionesEnsalada.forEach(ensalada => {
+            ensaladaOptions += `<option value="${ensalada}">${ensalada}</option>`;
+        });
+
     
                 formGroup.innerHTML = `
                     <h3>Almuerzo ${i}</h3>
@@ -250,17 +299,24 @@
                         ${principiosOptions}
                     <option value="Bandeja">Sin Principio</option>
                     </select>
+                    
+
                     <label>Acompañante:</label>
                     <select>
                         <option value="Sin acompañante">Sin acompañante</option>
-                        <option value="Porción de Arroz">Porcion de Arroz</option>
-                        <option value="Porci´ón de Sopa">Porcion de Sopa/option>
+                        <option value="Papas a la Francesa">Porcion de Arroz</option>
+                        <option value="Papas a la Francesa">Porcion de Sopa</option>
                         <option value="Papas a la Francesa">Papas a la Francesa</option>
-                        <option value="Jugos Hit">Jugo Hit</option>
-                        <option value="Gaseosa 600 ml">Gaseosa 600 ml</option>
-                        <option value="Gaseosa 1.5L">Gaseosa 1.5L</option>
-                        <option value="Gaseosa 2.5L">Gaseosa 2.5L</option>
+                        <option value="Papas a la Francesa">Jugo Hit</option>
+                        <option value="Papas a la Francesa">Gaseosa 600 ml</option>
+                        <option value="Papas a la Francesa">Gaseosa 1.5L</option>
+                        <option value="Papas a la Francesa">Gaseosa 2.5L</option>
                     </select>
+
+                    <label>Ensalada:</label>
+            <select>
+                ${ensaladaOptions}
+            </select>
                 `;
                 menuForm.appendChild(formGroup);
             }
@@ -275,15 +331,19 @@
                 const plato = selects[1].value;
                 const principio = selects[2].value;
                 const acompanante = selects[3].value;
-                pedidos.push(`Almuerzo ${index + 1}: \n Sopa: ${sopa}, \n Plato: ${plato}, \n Principio: ${principio}, \n Acompañante: ${acompanante}`);
+                const ensalada = selects[4].value;
+                pedidos.push(`Almuerzo ${index + 1}: \n Sopa: ${sopa}, \n Plato: ${plato}, \n Principio: ${principio}, \n Acompañante: ${acompanante}, \n Ensalada: ${ensalada}`);
             });
+            const nombreReceptor = document.getElementById("nombre-receptor").value.trim();
+            const direccion = document.getElementById("direccion").value;
+
     
             if (pedidos.length === 0 || pedidos.some(pedido => pedido.includes(": Sopa: ,"))) {
                 alert("Por favor completa todos los campos antes de enviar.");
                 return;
             }
     
-            const mensaje = `Hola, aquí está mi pedido:\n\n${pedidos.join("\n")}`;
+            const mensaje = `Hola, aquí está mi pedido:\n\n${pedidos.join("\n")}\n\nNombre del receptor: ${nombreReceptor}\nDirección: ${direccion}`;
             const telefono = "573205063020"; // Número del restaurante
             const url = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
             window.open(url, "_blank");
@@ -295,3 +355,4 @@
     
 </body>
 </html>
+
