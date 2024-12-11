@@ -271,6 +271,16 @@
             ensaladaOptions += `<option value="${ensalada}">${ensalada}</option>`;
         });
 
+
+        let bebidasOptions = `
+            <option value="">Seleccione una bebida</option>
+            <option value="Jugo Hit">Jugo Hit</option>
+            <option value="Gaseosa 600mL">Gaseosa 600 ml</option>
+            <option value="Gaseosa 1.5L">Gaseosa 1.5L</option>
+            <option value="Gaseosa 2.5L">Gaseosa 2.5L</option>
+            <option value="Limonada">Limonada</option>
+        `;
+
     
                 formGroup.innerHTML = `
                     <h3>Almuerzo ${i}</h3>
@@ -310,9 +320,14 @@
                     </select>
 
                     <label>Ensalada:</label>
-            <select>
-                ${ensaladaOptions}
-            </select>
+                    <select>
+                        ${ensaladaOptions}
+                    </select>
+
+                    <label>Bebida:</label>
+                    <select>
+                        ${bebidasOptions}
+                    </select>
                 `;
                 menuForm.appendChild(formGroup);
             }
@@ -328,7 +343,9 @@
                 const principio = selects[2].value;
                 const acompanante = selects[3].value;
                 const ensalada = selects[4].value;
-                pedidos.push(`Almuerzo ${index + 1}: \n Sopa: ${sopa}, \n Plato: ${plato}, \n Principio: ${principio}, \n Acompañante: ${acompanante}, \n Ensalada: ${ensalada}`);
+                const bebida = selects[5].value;
+
+                pedidos.push(`Almuerzo ${index + 1}: \n Sopa: ${sopa}, \n Plato: ${plato}, \n Principio: ${principio}, \n Acompañante: ${acompanante}, \n Ensalada: ${ensalada}, \n Bebida: ${bebida}`);
             });
             const nombreReceptor = document.getElementById("nombre-receptor").value.trim();
             const direccion = document.getElementById("direccion").value;
@@ -351,4 +368,3 @@
     
 </body>
 </html>
-
