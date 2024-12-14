@@ -159,6 +159,7 @@
         <header class="header">
             <h1>RESTAURANTE PAULA</h1>
             <h2>Selecciona la cantidad de almuerzos</h2>
+            <h2>BANDEJA $12.000   |   ALMUERZO $13.000</h2>
         </header>
 
         <div class="counter">
@@ -195,7 +196,7 @@
                 martes: ["Sancocho de pescado", "Sancocho de pollo", "Sopa campesina"],
                 miércoles: ["Sancocho de pescado", "Sopa de pastas"],
                 jueves: ["Sancocho de pescado", "Ajiaco", "Sancocho de Pollo"],
-                viernes: ["Cazuela de frijoles", "Sancocho de pescado", "Sopa de Plátano Frito"],
+                viernes: ["Cazuela de frijoles", "Sancocho de pescado", "Sancocho de pollo"],
                 sábado: ["Sancocho de pescado", "Sopa de guineo"],
                 domingo: ["Sancocho de pescado", "Sancocho de gallina"]
             };
@@ -210,7 +211,7 @@
                 martes: ["Frijoles", "Habichuelas"],
                 miércoles: ["Frijoles", "Espagueti"],
                 jueves: ["Frijoles", "Lentejas"],
-                viernes: ["Frijoles", "Espaguetis"],
+                viernes: ["Frijoles", "Arvejas"],
                 sábado: ["Frijoles", "Zanahoria"],
                 domingo: []
             };
@@ -245,107 +246,126 @@
         return opcionesBase;
 };
     
-        const generarFormularios = () => {
-            menuForm.innerHTML = "";
-            const sopasDelDia = obtenerSopaDelDia();
-            const principiosDelDia = obtenerPrincipioDelDia();
-            const opcionesEnsalada = obtenerOpcionesEnsalada();
+const generarFormularios = () => {
+    menuForm.innerHTML = "";
+    const sopasDelDia = obtenerSopaDelDia();
+    const principiosDelDia = obtenerPrincipioDelDia();
+    const opcionesEnsalada = obtenerOpcionesEnsalada();
 
-    
-            for (let i = 1; i <= cantidad; i++) {
-                const formGroup = document.createElement("div");
-                formGroup.classList.add("category");
-    
-                let sopasOptions = "<option value=''>Seleccione una sopa</option>";
-                sopasDelDia.forEach(sopa => {
-                    sopasOptions += `<option value="${sopa}">${sopa}</option>`;
-                });
-    
-                let principiosOptions = "<option value=''>Seleccione un principio</option>";
-                principiosDelDia.forEach(principio => {
-                    principiosOptions += `<option value="${principio}">${principio}</option>`;
-                });
+    for (let i = 1; i <= cantidad; i++) {
+        const formGroup = document.createElement("div");
+        formGroup.classList.add("category");
 
-                let ensaladaOptions = "<option value=''>Seleccione una opción de ensalada</option>";
+        let sopasOptions = "<option value=''>Seleccione una sopa</option>";
+        sopasDelDia.forEach(sopa => {
+            sopasOptions += `<option value="${sopa}">${sopa}</option>`;
+        });
+
+        let principiosOptions = "<option value=''>Seleccione un principio</option>";
+        principiosDelDia.forEach(principio => {
+            principiosOptions += `<option value="${principio}">${principio}</option>`;
+        });
+
+        let ensaladaOptions = "<option value=''>Seleccione una opción de ensalada</option>";
         opcionesEnsalada.forEach(ensalada => {
             ensaladaOptions += `<option value="${ensalada}">${ensalada}</option>`;
         });
 
-
         let bebidasOptions = `
             <option value="">Seleccione una bebida</option>
-            <option value="Jugo Hit $6.000">Jugo Hit $6.000</option>
-            <option value="Gaseosa 600mL $3.000">Gaseosa 600 ml $3.000</option>
-            <option value="Gaseosa 1.5L $4000">Gaseosa 1.5L $4.000</option>
-            <option value="Gaseosa 2.5L $4.500">Gaseosa 2.5 $4.500L</option>
+            <option value="Jugo Hit">Jugo Hit</option>
+            <option value="Gaseosa 600mL">Gaseosa 600 ml</option>
+            <option value="Gaseosa 1.5L">Gaseosa 1.5L</option>
+            <option value="Gaseosa 2.5L">Gaseosa 2.5L</option>
             <option value="Limonada">Limonada</option>
         `;
 
-    
-                formGroup.innerHTML = `
-                    <h3>Almuerzo ${i}</h3>
-                    <label>Sopa:</label>
-                    <select>
-                        ${sopasOptions}
-                        <option value="Bandeja">Solo Bandeja</option>
-                    </select>
-                    <label>Plato:</label>
-                    <select>
-                        <option value="">Seleccione un plato</option>
-                        <option value="Carne asada">Carne asada</option>
-                        <option value="Carne en bistec">Carne en bistec</option>
-                        <option value="Carne a la BBQ">Carne a la BBQ</option>
-                        <option value="Carne encebollada">Carne encebollada</option>
-                        <option value="Pollo a la plancha/BBQ">Pollo a la plancha/BBQ</option>
-                        <option value="Pollo sudado">Pollo sudado</option>
-                        <option value="Pollo frito">Pollo frito</option>
-                        <option value="Cerdo a la plancha/BBQ">Cerdo a la plancha/BBQ</option>
-                        <option value="Hígado a la plancha">Hígado a la plancha</option>
-                        <option value="Hígado en bistec">Hígado en bistec</option>
-                        <option value="Hígado encebollado">Hígado encebollado</option>
-                    </select>
-                    <label>Principio:</label>
-                    <select>
-                        ${principiosOptions}
-                    <option value="Bandeja">Sin Principio</option>
-                    </select>
-                    
+        formGroup.innerHTML = `
+            <h3>Almuerzo ${i}</h3>
+            <label>Sopa:</label>
+            <select class="sopa-select">
+                ${sopasOptions}
+                <option value="Bandeja">Solo Bandeja</option>
+            </select>
+            <label>Plato:</label>
+            <select class="plato-select">
+                <option value="">Seleccione un plato</option>
+                <option value="Carne asada">Carne asada</option>
+                <option value="Carne en bistec">Carne en bistec</option>
+                <option value="Carne a la BBQ">Carne a la BBQ</option>
+                <option value="Carne encebollada">Carne encebollada</option>
+                <option value="Pollo a la plancha/BBQ">Pollo a la plancha/BBQ</option>
+                <option value="Pollo sudado">Pollo sudado</option>
+                <option value="Pollo frito">Pollo frito</option>
+                <option value="Cerdo a la plancha/BBQ">Cerdo a la plancha/BBQ</option>
+                <option value="Hígado a la plancha">Hígado a la plancha</option>
+                <option value="Hígado en bistec">Hígado en bistec</option>
+                <option value="Hígado encebollado">Hígado encebollado</option>
+            </select>
+            <label>Principio:</label>
+            <select class="principio-select">
+                ${principiosOptions}
+                <option value="Bandeja">Sin Principio</option>
+            </select>
 
-                    <label>Acompañante:</label>
-                    <select>
-                        <option value="Sin acompañante">Sin acompañante</option>
-                        <option value="Porcion de Arroz">Porcion de Arroz</option>
-                        <option value="Porcion de Sopa">Porcion de Sopa</option>
-                        <option value="Papas a la Francesa">Papas a la Francesa</option>
-                    </select>
+            <label>¿Lo desea con Arroz?:</label>
+            <select class="arroz-select">
+                <option value="Si">Si</option>
+                <option value="No">No</option>
+            </select>
 
-                    <label>Ensalada:</label>
-                    <select>
-                        ${ensaladaOptions}
-                    </select>
 
-                    <label>Bebida:</label>
-                    <select>
-                        ${bebidasOptions}
-                    </select>
-                `;
-                menuForm.appendChild(formGroup);
+            <label>Acompañante:</label>
+            <select>
+                <option value="Sin acompañante">Sin acompañante</option>
+                <option value="Porcion de Arroz">Porcion de Arroz</option>
+                <option value="Porcion de Sopa">Porcion de Sopa</option>
+                <option value="Papas a la Francesa">Papas a la Francesa</option>
+            </select>
+            <label>Ensalada:</label>
+            <select>
+                ${ensaladaOptions}
+            </select>
+            <label>Bebida:</label>
+            <select>
+                ${bebidasOptions}
+            </select>
+        `;
+        menuForm.appendChild(formGroup);
+    }
+
+    // Agregar eventos para habilitar/deshabilitar selectores según la sopa
+    const sopaSelects = document.querySelectorAll(".sopa-select");
+    sopaSelects.forEach((sopaSelect, index) => {
+        sopaSelect.addEventListener("change", (event) => {
+            const platoSelect = menuForm.querySelectorAll(".plato-select")[index];
+            const principioSelect = menuForm.querySelectorAll(".principio-select")[index];
+            
+            if (event.target.value === "Ajiaco") {
+                platoSelect.disabled = true;
+                principioSelect.disabled = true;
+            } else {
+                platoSelect.disabled = false;
+                principioSelect.disabled = false;
             }
-        };
-    
+        });
+    });
+};
+
         document.getElementById("enviar-pedido").addEventListener("click", () => {
             const pedidos = [];
-            const categorias = menuForm.querySelectorAll(".category");
-            categorias.forEach((categoria, index) => {
-                const selects = categoria.querySelectorAll("select");
-                const sopa = selects[0].value;
-                const plato = selects[1].value;
-                const principio = selects[2].value;
-                const acompanante = selects[3].value;
-                const ensalada = selects[4].value;
-                const bebida = selects[5].value;
+    const categorias = menuForm.querySelectorAll(".category");
+    categorias.forEach((categoria, index) => {
+        const selects = categoria.querySelectorAll("select");
+        const sopa = selects[0].value;
+        const plato = selects[1].value;
+        const principio = selects[2].value;
+        const arroz = selects[3].value; // Capturar si quiere arroz
+        const acompanante = selects[4].value;
+        const ensalada = selects[5].value;
+        const bebida = selects[6].value;
 
-                pedidos.push(`Almuerzo ${index + 1}: \n Sopa: ${sopa}, \n Plato: ${plato}, \n Principio: ${principio}, \n Acompañante: ${acompanante}, \n Ensalada: ${ensalada}, \n Bebida: ${bebida}`);
+        pedidos.push(`Almuerzo ${index + 1}: \n Sopa: ${sopa}, \n Plato: ${plato}, \n Principio: ${principio}, \n Con Arroz: ${arroz}, \n Acompañante: ${acompanante}, \n Ensalada: ${ensalada}, \n Bebida: ${bebida}`);
             });
             const nombreReceptor = document.getElementById("nombre-receptor").value.trim();
             const direccion = document.getElementById("direccion").value;
@@ -357,9 +377,9 @@
             }
     
             const mensaje = `Hola, aquí está mi pedido:\n\n${pedidos.join("\n")}\n\nNombre del receptor: ${nombreReceptor}\nDirección: ${direccion}`;
-            const telefono = "573012463809"; // Número del restaurante
-            const url = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
-            window.open(url, "_blank");
+    const telefono = "573012463809"; // Número del restaurante
+    const url = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
+    window.open(url, "_blank");
         });
     
         // Generar el primer formulario por defecto
