@@ -335,21 +335,22 @@ const generarFormularios = () => {
     }
 
     // Agregar eventos para habilitar/deshabilitar selectores según la sopa
-    const sopaSelects = document.querySelectorAll(".sopa-select");
-    sopaSelects.forEach((sopaSelect, index) => {
-        sopaSelect.addEventListener("change", (event) => {
-            const platoSelect = menuForm.querySelectorAll(".plato-select")[index];
-            const principioSelect = menuForm.querySelectorAll(".principio-select")[index];
-            
-            if (event.target.value === "Ajiaco") {
-                platoSelect.disabled = true;
-                principioSelect.disabled = true;
-            } else {
-                platoSelect.disabled = false;
-                principioSelect.disabled = false;
-            }
+            sopaSelects.forEach((sopaSelect, index) => {
+            sopaSelect.addEventListener("change", (event) => {
+                const platoSelect = menuForm.querySelectorAll(".plato-select")[index];
+                const principioSelect = menuForm.querySelectorAll(".principio-select")[index];
+                
+                // Si se selecciona "Solo Bandeja", deshabilitamos las opciones de plato y principio
+                if (event.target.value === "Bandeja") {
+                    platoSelect.disabled = true;
+                    principioSelect.disabled = true;
+                } else {
+                    platoSelect.disabled = false;
+                    principioSelect.disabled = false;
+                }
+            });
         });
-    });
+
 };
 
         document.getElementById("enviar-pedido").addEventListener("click", () => {
